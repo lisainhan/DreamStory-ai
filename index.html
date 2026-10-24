@@ -133,17 +133,51 @@ function createStory(){
 
     output += headings[i] + "\n" + prompt + "\n\n";
 
+    
     html += "<section class='scene'><h3>" + headings[i] +
-      "</h3><div class='tag'>Character and environment consistency enabled</div><p>" +
-      escapeHTML(prompt) + "</p><button class='secondary' onclick='copyPrompt(" +
-      JSON.stringify(prompt) + ")'>Copy this scene prompt</button></section>";
-  }
-
-  savedPlan = output;
+      "</h3><div class='tag'>Tap the text below to edit this scene</div>" +
+      "<textarea id='sceneEdit" + i + "' rows='8' " +
+      "oninput='updateScene(" + i + ")'>" +
+      escapeHTML(prompt) + "</textarea>" +
+      "<button class='secondary' onclick='copyPrompt(document.getElementById(\"sceneEdit" + i + "\").value)'>Copy this scene</button></section>";
+  } 
+  
+ savedPlan = output;
   document.getElementById("results").innerHTML = html;
   document.getElementById("download").style.display = "block";
 }
 
+function updateScene(index){
+  const editor = document.getElementById("sceneEdit" + index);
+  if(!editor) return;
+
+  const marker = new RegExp(
+    "Scene " + (index + 1) + " —[^\\n]*"
+  );
+
+  const sceneStart = "Scene " + (index + 1) + " —";
+  const lines = savedPlan.split("\n");
+  let found = false;
+  let result = [];
+
+  for(let i = 0; i < lines.length; i++){
+    if(lines[i].startsWith(sceneStart)){
+      found = true;
+      result.push(lines[i]);
+      result.push(editor.value);
+      while(i + 1 < lines.length &&
+            !lines[i + 1].startsWith("Scene ")){
+        i++;
+      }
+    }else{
+      result.push(lines[i]);
+    }
+  }
+
+  if(found){
+    savedPlan = result.join("\n");
+  }
+}
 function escapeHTML(value){
   return value.replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
