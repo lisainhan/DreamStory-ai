@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DreamStory AI</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100d1c;color:#fff;font-family:Arial,sans-serif}
+header{padding:22px 18px;border-bottom:1px solid #393047}
+.logo{font-size:24px;font-weight:bold;color:#d8b4fe}
+main{max-width:650px;margin:auto;padding:24px 18px}
+h1{font-size:34px;line-height:1.15}
+p{color:#c4bbd5;line-height:1.6}
+label{display:block;margin:22px 0 9px;font-weight:bold}
+textarea,select{width:100%;padding:14px;border-radius:12px;border:1px solid #55466d;background:#211a32;color:white;font-size:16px}
+textarea{min-height:130px;resize:vertical}
+button{border:0;border-radius:12px;padding:15px;background:#a855f7;color:white;font-weight:bold;font-size:16px;width:100%;margin-top:16px}
+button:active{opacity:.8}
+.panel{margin-top:24px;padding:18px;border:1px solid #40334f;border-radius:16px;background:#191426}
+.scene{padding:12px;margin-top:10px;background:#241c35;border-radius:10px}
+.small{font-size:13px;color:#aaa0bb}
+</style>
+</head>
+<body>
+<header><div class="logo">✨ DreamStory AI</div></header>
+<main>
+<p>YOUR IMAGINATION, YOUR MOVIE</p>
+<h1>Turn your ideas into stories.</h1>
+<p>Write a story and create a scene-by-scene video plan.</p>
+
+<label for="story">Describe your story</label>
+<textarea id="story" placeholder="A poor girl discovers a magical forest..."></textarea>
+
+<label for="style">Animation style</label>
+<select id="style">
+<option>3D cartoon</option>
+<option>Anime</option>
+<option>Realistic cinematic</option>
+<option>2D animation</option>
+</select>
+
+<label for="format">Video format</label>
+<select id="format">
+<option>Vertical YouTube Shorts (9:16)</option>
+<option>Landscape (16:9)</option>
+</select>
+
+<button onclick="makeStory()">✨ Create my story plan</button>
+<div id="result" class="panel" hidden></div>
+<p class="small">Starter version • Video generation engine coming next</p>
+</main>
+
+<script>
+function makeStory(){
+ const story=document.getElementById('story').value.trim();
+ const style=document.getElementById('style').value;
+ const format=document.getElementById('format').value;
+ const result=document.getElementById('result');
+ if(!story){alert('Please write a story first!');return}
+ const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const parts=[
+  ['Scene 1 — The opening','Introduce the main character and the setting.'],
+  ['Scene 2 — The discovery','Show the important event in the story.'],
+  ['Scene 3 — The challenge','Create suspense and a problem to solve.'],
+  ['Scene 4 — The ending','Finish with a satisfying or surprising moment.']
+ ];
+ result.hidden=false;
+ result.innerHTML='<h2>Your video plan 🎬</h2><p><b>Story:</b> '+esc(story)+'</p><p><b>Style:</b> '+esc(style)+'<br><b>Format:</b> '+esc(format)+'</p>'+
+ parts.map((p,i)=>'<div class="scene"><b>'+p[0]+'</b><p>'+p[1]+'</p><p class="small">Visual prompt: '+esc(story)+'. '+esc(style)+' animation. Scene '+(i+1)+'. Cinematic composition.</p></div>').join('')+
+ '<button onclick="downloadPlan()">Download story plan</button>';
+}
+function downloadPlan(){
+ const text=document.getElementById('result').innerText;
+ const blob=new Blob([text],{type:'text/plain'});
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);
+ a.download='dreamstory-plan.txt';
+ a.click();
+ URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
