@@ -28,6 +28,17 @@ footer{text-align:center;padding:25px;color:#9b8cab;font-size:12px}
 </head>
 <body>
 <header><div class="logo">✨ DreamStory AI</div></header>
+  
+<div style="text-align:right; margin:12px 0;">
+  <label for="language">🌐 Language / ቋንቋ:</label>
+  <select id="language" onchange="changeLanguage()">
+    <option value="en">English</option>
+    <option value="am">አማርኛ (Amharic)</option>
+    <option value="om">Afaan Oromoo</option>
+    <option value="ti">ትግርኛ (Tigrinya)</option>
+  </select>
+</div>
+  
 <main>
 <h1>Turn your ideas into stories</h1>
 <p>Create connected scenes with the same characters, the same location, and different actions in every scene.</p>
@@ -204,6 +215,31 @@ function downloadPlan(){
   link.download = "DreamStory-AI-Story-Plan.txt";
   link.click();
   URL.revokeObjectURL(url);
+}
+  function changeLanguage() {
+  const lang = document.getElementById("language").value;
+
+  const messages = {
+    en: {
+      heading: "Turn your ideas into stories",
+      language: "Language"
+    },
+    am: {
+      heading: "ሐሳቦችዎን ወደ ታሪኮች ይቀይሩ",
+      language: "ቋንቋ"
+    },
+    om: {
+      heading: "Yaada kee gara seenaatti jijjiiri",
+      language: "Afaan"
+    },
+    ti: {
+      heading: "ሓሳባትካ ናብ ዛንታታት ቀይር",
+      language: "ቋንቋ"
+    }
+  };
+
+  document.querySelector("h1").textContent =
+    messages[lang].heading;
 }
 </script>
 </body>
