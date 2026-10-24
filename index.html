@@ -8,77 +8,168 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#100d1c;color:#fff;font-family:Arial,sans-serif}
-header{padding:22px 18px;border-bottom:1px solid #393047}
-.logo{font-size:24px;font-weight:bold;color:#d8b4fe}
-main{max-width:650px;margin:auto;padding:24px 18px}
-h1{font-size:34px;line-height:1.15}
+header{padding:22px 18px;border-bottom:1px solid #302747}
+.logo{font-size:24px;font-weight:bold;color:#d6a5ff}
+main{max-width:650px;margin:auto;padding:22px 16px}
+h1{font-size:32px;line-height:1.2}
 p{color:#c4bbd5;line-height:1.6}
-label{display:block;margin:22px 0 9px;font-weight:bold}
-textarea,select{width:100%;padding:14px;border-radius:12px;border:1px solid #55466d;background:#211a32;color:white;font-size:16px}
-textarea{min-height:130px;resize:vertical}
-button{border:0;border-radius:12px;padding:15px;background:#a855f7;color:white;font-weight:bold;font-size:16px;width:100%;margin-top:16px}
-button:active{opacity:.8}
-.panel{margin-top:24px;padding:18px;border:1px solid #40334f;border-radius:16px;background:#191426}
-.scene{padding:12px;margin-top:10px;background:#241c35;border-radius:10px}
-.small{font-size:13px;color:#aaa0bb}
+label{display:block;margin:20px 0 8px;font-weight:bold}
+textarea,input,select{width:100%;padding:14px;border:1px solid #493b62;border-radius:10px;background:#1c172b;color:white;font-size:16px}
+textarea{min-height:110px;resize:vertical}
+button{width:100%;padding:15px;border:0;border-radius:12px;background:#bd83ff;color:#170d25;font-size:16px;font-weight:bold;margin-top:18px;cursor:pointer}
+button.secondary{background:#332644;color:white}
+.hint{font-size:13px;color:#b7a9ca}
+.scene{background:#1c172b;border:1px solid #493b62;border-radius:14px;padding:16px;margin-top:14px}
+.scene h3{color:#d6a5ff;margin-top:0}
+.scene p{white-space:pre-wrap}
+.tag{font-size:12px;color:#b7a9ca}
+footer{text-align:center;padding:25px;color:#9b8cab;font-size:12px}
 </style>
 </head>
 <body>
 <header><div class="logo">✨ DreamStory AI</div></header>
 <main>
-<p>YOUR IMAGINATION, YOUR MOVIE</p>
-<h1>Turn your ideas into stories.</h1>
-<p>Write a story and create a scene-by-scene video plan.</p>
+<h1>Turn your ideas into stories</h1>
+<p>Create connected scenes with the same characters, the same location, and different actions in every scene.</p>
 
-<label for="story">Describe your story</label>
-<textarea id="story" placeholder="A poor girl discovers a magical forest..."></textarea>
+<label for="story">Your story idea</label>
+<textarea id="story" placeholder="Example: A girl eating a chocolate cake in a New York cafe..."></textarea>
 
-<label for="style">Animation style</label>
+<label for="character">Main character description (optional)</label>
+<input id="character" placeholder="Example: Young woman, long black hair, red dress">
+
+<label for="location">Location and environment (optional)</label>
+<input id="location" placeholder="Example: A cozy New York cafe with large windows">
+
+<label for="style">Visual style</label>
 <select id="style">
-<option>3D cartoon</option>
+<option>Cinematic realistic</option>
+<option>3D animation</option>
 <option>Anime</option>
-<option>Realistic cinematic</option>
-<option>2D animation</option>
+<option>Cartoon</option>
+<option>Fantasy</option>
 </select>
 
 <label for="format">Video format</label>
 <select id="format">
-<option>Vertical YouTube Shorts (9:16)</option>
-<option>Landscape (16:9)</option>
+<option>Vertical 9:16 — TikTok and Reels</option>
+<option>Landscape 16:9 — YouTube</option>
+<option>Square 1:1</option>
 </select>
 
-<button onclick="makeStory()">✨ Create my story plan</button>
-<div id="result" class="panel" hidden></div>
-<p class="small">Starter version • Video generation engine coming next</p>
+<p class="hint">Tip: Describe the character and location once. DreamStory AI will repeat those details in every scene prompt to help maintain continuity.</p>
+
+<button onclick="createStory()">Create my story plan</button>
+<div id="results"></div>
+<button id="download" class="secondary" style="display:none" onclick="downloadPlan()">Download story plan</button>
 </main>
+<footer>DreamStory AI · Your imagination, one scene at a time</footer>
 
 <script>
-function makeStory(){
- const story=document.getElementById('story').value.trim();
- const style=document.getElementById('style').value;
- const format=document.getElementById('format').value;
- const result=document.getElementById('result');
- if(!story){alert('Please write a story first!');return}
- const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const parts=[
-  ['Scene 1 — The opening','Introduce the main character and the setting.'],
-  ['Scene 2 — The discovery','Show the important event in the story.'],
-  ['Scene 3 — The challenge','Create suspense and a problem to solve.'],
-  ['Scene 4 — The ending','Finish with a satisfying or surprising moment.']
- ];
- result.hidden=false;
- result.innerHTML='<h2>Your video plan 🎬</h2><p><b>Story:</b> '+esc(story)+'</p><p><b>Style:</b> '+esc(style)+'<br><b>Format:</b> '+esc(format)+'</p>'+
- parts.map((p,i)=>'<div class="scene"><b>'+p[0]+'</b><p>'+p[1]+'</p><p class="small">Visual prompt: '+esc(story)+'. '+esc(style)+' animation. Scene '+(i+1)+'. Cinematic composition.</p></div>').join('')+
- '<button onclick="downloadPlan()">Download story plan</button>';
+let savedPlan = "";
+
+function createStory(){
+  const story = document.getElementById("story").value.trim();
+  const characterInput = document.getElementById("character").value.trim();
+  const locationInput = document.getElementById("location").value.trim();
+  const style = document.getElementById("style").value;
+  const format = document.getElementById("format").value;
+
+  if(!story){
+    alert("Please enter a story idea first.");
+    return;
+  }
+
+  const character = characterInput ||
+    "The same main character described or introduced in the original story. Keep the face, age, hairstyle, body, clothing, and identifying features consistent in every scene.";
+
+  const location = locationInput ||
+    "The same location and environment established in the original story. Keep the background, furniture, architecture, objects, time of day, and lighting consistent unless the story explicitly changes them.";
+
+  const text = story.toLowerCase();
+  let actions;
+
+  if(/cake|eat|eating|food|meal|lunch|dinner|restaurant|cafe|café/.test(text)){
+    actions = [
+      "Establish the scene: show the main character in the established environment, noticing or approaching the food or main object. Use a wide establishing shot.",
+      "Show the main character beginning the activity: sitting down if appropriate, reaching for the food or object, and preparing to interact with it. Use a medium shot.",
+      "Show the main action in progress: the character takes a bite, tastes the food, or interacts naturally with the main object. Use a close-up of the action while preserving the character's appearance.",
+      "Show the result and emotional reaction: the character finishes the action and reacts naturally, such as smiling with satisfaction. Use a medium shot that still shows the same environment."
+    ];
+  } else {
+    actions = [
+      "Establish the story: show the main character in the established environment, introducing the situation and main subject. Use a wide establishing shot.",
+      "Begin the action: show the main character taking the first meaningful step in the activity described in the story. Use a medium shot.",
+      "Develop the action: show a new moment that naturally continues the previous scene, with a different gesture, movement, or camera angle. Use a close-up or medium shot.",
+      "Complete this short sequence: show the result of the action or a natural emotional reaction. Use a clear final shot in the same environment."
+    ];
+  }
+
+  const headings = [
+    "Scene 1 — Establish the setting",
+    "Scene 2 — Begin the action",
+    "Scene 3 — Continue the action",
+    "Scene 4 — Finish the moment"
+  ];
+
+  let output = "# DreamStory AI — Story Plan\n\n";
+  output += "STORY IDEA: " + story + "\n";
+  output += "VISUAL STYLE: " + style + "\n";
+  output += "VIDEO FORMAT: " + format + "\n\n";
+  output += "CHARACTER CONTINUITY: " + character + "\n\n";
+  output += "ENVIRONMENT CONTINUITY: " + location + "\n\n";
+
+  let html = "<h2 style='margin-top:32px'>Your connected scenes</h2>";
+  html += "<p>Each scene keeps the same character and setting while progressing the action.</p>";
+
+  for(let i=0;i<4;i++){
+    const prompt =
+      "Original story: " + story + "\n\n" +
+      "CHARACTER LOCK: " + character + "\n\n" +
+      "LOCATION LOCK: " + location + "\n\n" +
+      "ACTION IN THIS SCENE: " + actions[i] + "\n\n" +
+      "CONTINUITY RULES: Use the same character identity, face, hair, age, body, and clothing as all previous scenes. Keep the same location, background layout, furniture, and environmental details. Do not introduce a different main character or move to a new location unless the story explicitly requests it. Make this scene a continuation of the previous scene, not a new unrelated story.\n\n" +
+      "VISUAL STYLE: " + style + ". Video format: " + format + ". Natural movement, coherent details, clear composition.";
+
+    output += headings[i] + "\n" + prompt + "\n\n";
+
+    html += "<section class='scene'><h3>" + headings[i] +
+      "</h3><div class='tag'>Character and environment consistency enabled</div><p>" +
+      escapeHTML(prompt) + "</p><button class='secondary' onclick='copyPrompt(" +
+      JSON.stringify(prompt) + ")'>Copy this scene prompt</button></section>";
+  }
+
+  savedPlan = output;
+  document.getElementById("results").innerHTML = html;
+  document.getElementById("download").style.display = "block";
 }
+
+function escapeHTML(value){
+  return value.replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function copyPrompt(prompt){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(prompt)
+      .then(()=>alert("Scene prompt copied!"))
+      .catch(()=>window.prompt("Copy this prompt:",prompt));
+  }else{
+    window.prompt("Copy this prompt:",prompt);
+  }
+}
+
 function downloadPlan(){
- const text=document.getElementById('result').innerText;
- const blob=new Blob([text],{type:'text/plain'});
- const a=document.createElement('a');
- a.href=URL.createObjectURL(blob);
- a.download='dreamstory-plan.txt';
- a.click();
- URL.revokeObjectURL(a.href);
+  const blob = new Blob([savedPlan],{type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "DreamStory-AI-Story-Plan.txt";
+  link.click();
+  URL.revokeObjectURL(url);
 }
 </script>
 </body>
