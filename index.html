@@ -213,6 +213,33 @@ function addScene(){
   renderScenes();
   updateSavedPlan();
 }
+
+function updateSavedPlan(){
+  let output = "# DreamStory AI — Story Plan\n\n";
+
+  output += "STORY IDEA: " +
+    document.getElementById("story").value.trim() + "\n";
+  output += "VISUAL STYLE: " +
+    document.getElementById("style").value + "\n";
+  output += "VIDEO FORMAT: " +
+    document.getElementById("format").value + "\n\n";
+
+  output += "CHARACTER CONTINUITY: " +
+    (document.getElementById("character").value.trim() ||
+    "Use the character described in the story.") + "\n\n";
+
+  output += "ENVIRONMENT CONTINUITY: " +
+    (document.getElementById("location").value.trim() ||
+    "Use the location described in the story.") + "\n\n";
+
+  scenes.forEach(function(scene){
+    output += scene.heading + "\n" +
+      scene.prompt + "\n\n";
+  });
+
+  savedPlan = output;
+}
+  
 function updateScene(index){
   const editor = document.getElementById("sceneEdit" + index);
   if(!editor) return;
