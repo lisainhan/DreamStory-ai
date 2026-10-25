@@ -160,16 +160,16 @@ function createStory(){
 
     output += headings[i] + "\n" + prompt + "\n\n";
     
-    html += "<section class='scene'><h3>" + escapeHTML(heading) 
+    
+    html += "<section class='scene'><h3>" + escapeHTML(headings[i]) +
       "</h3><div class='tag'>Tap the text below to edit this scene</div>" +
       "<textarea id='sceneEdit" + i + "' rows='8' " +
-       "oninput='updateScene(" + i + ")'>" +
-        escapeHTML(prompt) + "</textarea>" +
-       "<button class='secondary' onclick='copyPrompt(document.getElementById(\"sceneEdit" + i + "\").value)'>Copy this scene</button></section>";
-  
+      "oninput='updateScene(" + i + ")'>" +
+      escapeHTML(prompt) + "</textarea>" +
+      "<button class='secondary' onclick='copyPrompt(document.getElementById(\"sceneEdit" + i + "\").value)'>Copy this scene</button></section>";
   }
- savedPlan = output;
-  let scenes = [];
+
+  savedPlan = output;
   document.getElementById("results").innerHTML = html;
   document.getElementById("download").style.display = "block";
 }
