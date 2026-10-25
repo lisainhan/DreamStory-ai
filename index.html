@@ -97,24 +97,25 @@ function createStory(){
   const location = locationInput ||
     "The same location and environment established in the original story. Keep the background, furniture, architecture, objects, time of day, and lighting consistent unless the story explicitly changes them.";
 
-  const text = story.toLowerCase();
-  let actions;
 
-  if(/cake|eat|eating|food|meal|lunch|dinner|restaurant|cafe|café/.test(text)){
-    actions = [
-      "Establish the scene: show the main character in the established environment, noticing or approaching the food or main object. Use a wide establishing shot.",
-      "Show the main character beginning the activity: sitting down if appropriate, reaching for the food or object, and preparing to interact with it. Use a medium shot.",
-      "Show the main action in progress: the character takes a bite, tastes the food, or interacts naturally with the main object. Use a close-up of the action while preserving the character's appearance.",
-      "Show the result and emotional reaction: the character finishes the action and reacts naturally, such as smiling with satisfaction. Use a medium shot that still shows the same environment."
-    ];
-  } else {
-    actions = [
-      "Establish the story: show the main character in the established environment, introducing the situation and main subject. Use a wide establishing shot.",
-      "Begin the action: show the main character taking the first meaningful step in the activity described in the story. Use a medium shot.",
-      "Develop the action: show a new moment that naturally continues the previous scene, with a different gesture, movement, or camera angle. Use a close-up or medium shot.",
-      "Complete this short sequence: show the result of the action or a natural emotional reaction. Use a clear final shot in the same environment."
-    ];
-  }
+const text = story.toLowerCase();
+let actions;
+
+if (/cake|eat|eating|food|meal|lunch|dinner|restaurant|cafe|café/.test(text)) {
+  actions = [
+    "Show the main character approaching the food in the established setting. Describe the character's position, expression, and surroundings.",
+    "Show the character preparing to eat, reaching for the food, and sitting or standing naturally as appropriate.",
+    "Show the character tasting or eating the food, with realistic hand movements, facial expressions, and a clear close-up of the action.",
+    "Show the character finishing the meal and reacting naturally, while preserving the same appearance and environment."
+  ];
+} else {
+  actions = [
+    "Show the main character and the main situation described in the story. Establish the setting and the character's starting position.",
+    "Show the character beginning the specific activity described in the story, with clear body movements and interaction with the environment.",
+    "Show the next logical moment of that same activity, changing the gesture or camera angle while keeping the story continuous.",
+    "Show a natural outcome or reaction that fits the story, ending the sequence without introducing unrelated events."
+  ];
+}
 
   const headings = [
     "Scene 1 — Establish the setting",
