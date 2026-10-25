@@ -175,6 +175,30 @@ function createStory(){
 }
 
   
+function renderScenes(){
+  let html = "<h2 style='margin-top:32px'>Your connected scenes</h2>";
+  html += "<p>Each scene keeps the same character and setting while progressing the action.</p>";
+
+  scenes.forEach(function(scene, i){
+    html += "<section class='scene'>";
+    html += "<h3>" + escapeHTML(scene.heading) + "</h3>";
+    html += "<div class='tag'>Tap the text below to edit this scene</div>";
+    html += "<textarea id='sceneEdit" + i + "' rows='8' ";
+    html += "oninput='updateScene(" + i + ")'>";
+    html += escapeHTML(scene.prompt) + "</textarea>";
+
+    html += "<button class='secondary' onclick='copyPrompt(document.getElementById(\"sceneEdit" + i + "\").value)'>Copy this scene</button>";
+    html += "<button onclick='duplicateScene(" + i + ")'>Duplicate scene</button>";
+    html += "<button onclick='moveScene(" + i + ", -1)'>⬆️ Move up</button>";
+    html += "<button onclick='moveScene(" + i + ", 1)'>⬇️ Move down</button>";
+    html += "<button onclick='deleteScene(" + i + ")'>🗑️ Delete scene</button>";
+    html += "</section>";
+  });
+
+  html += "<button onclick='addScene()'>➕ Add a scene</button>";
+
+  document.getElementById("results").innerHTML = html;
+}
 function updateScene(index){
   const editor = document.getElementById("sceneEdit" + index);
   if(!editor) return;
