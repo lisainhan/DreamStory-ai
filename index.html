@@ -190,8 +190,6 @@ function renderScenes(){
 
     html += "<button class='secondary' onclick='copyPrompt(document.getElementById(\"sceneEdit" + i + "\").value)'>Copy this scene</button>";
     html += "<button onclick='duplicateScene(" + i + ")'>Duplicate scene</button>";
-    html += "<button onclick='moveScene(" + i + ", -1)'>⬆️ Move up</button>";
-    html += "<button onclick='moveScene(" + i + ", 1)'>⬇️ Move down</button>";
     html += "<button onclick='deleteScene(" + i + ")'>🗑️ Delete scene</button>";
     html += "</section>";
   });
