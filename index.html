@@ -226,6 +226,38 @@ function addScene(){
   updateSavedPlan();
 }
 
+function duplicateScene(index){
+  if(!scenes[index]) return;
+
+  const original = scenes[index];
+
+  scenes.splice(index + 1, 0, {
+    heading: original.heading + " (Copy)",
+    prompt: original.prompt
+  });
+
+  renderScenes();
+  updateSavedPlan();
+}
+
+function deleteScene(index){
+  if(!scenes[index]) return;
+
+  if(!confirm("Are you sure you want to delete this scene?")){
+    return;
+  }
+
+  scenes.splice(index, 1);
+
+  scenes.forEach(function(scene, i){
+    scene.heading = "Scene " + (i + 1) +
+      (scene.heading.includes("(Copy)") ? " (Copy)" : "");
+  });
+
+  renderScenes();
+  updateSavedPlan();
+}
+  
 function updateSavedPlan(){
   let output = "# DreamStory AI — Story Plan\n\n";
 
