@@ -202,11 +202,24 @@ function renderScenes(){
 function addScene(){
   const nextNumber = scenes.length + 1;
 
+  const story = document.getElementById("story").value.trim();
+  const character = document.getElementById("character").value.trim() ||
+    "Keep the same main character and appearance as the other scenes.";
+  const location = document.getElementById("location").value.trim() ||
+    "Keep the same location and environment as the other scenes.";
+  const style = document.getElementById("style").value;
+  const format = document.getElementById("format").value;
+
   scenes.push({
-    heading: "Scene " + nextNumber + " — New scene",
-    prompt: "Original story: " +
-      document.getElementById("story").value.trim() +
-      "\n\nDescribe the action for this new scene here."
+    heading: "Scene " + nextNumber + " — Continue the story",
+    prompt:
+      "ORIGINAL STORY: " + story + "\n\n" +
+      "CHARACTER CONSISTENCY: " + character + "\n\n" +
+      "LOCATION CONSISTENCY: " + location + "\n\n" +
+      "SCENE ACTION: Continue naturally from the previous scene. Show the main character performing the next meaningful action in the story. Include clear body movements, facial expressions, interaction with nearby objects, and a suitable camera angle. Keep the action connected to the original story.\n\n" +
+      "VISUAL STYLE: " + style + "\n" +
+      "VIDEO FORMAT: " + format + "\n\n" +
+      "CONTINUITY: Preserve the same character identity, clothing, environment, and visual details as the existing scenes."
   });
 
   renderScenes();
