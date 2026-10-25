@@ -170,7 +170,8 @@ function createStory(){
   }
 
   savedPlan = output;
-  document.getElementById("results").innerHTML = html;
+  renderScenes();
+updateSavedPlan();
   document.getElementById("download").style.display = "block";
 }
 
