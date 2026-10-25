@@ -122,6 +122,22 @@ function createStory(){
     "Scene 3 — Continue the action",
     "Scene 4 — Finish the moment"
   ];
+    scenes = [];
+
+  for(let i = 0; i < 4; i++){
+    const prompt =
+      "Original story: " + story + "\n\n" +
+      "CHARACTER LOCK: " + character + "\n\n" +
+      "LOCATION LOCK: " + location + "\n\n" +
+      "ACTION IN THIS SCENE: " + actions[i] + "\n\n" +
+      "CONTINUITY RULES: Use the same character identity, face, hair, age, body, and clothing as all previous scenes. Keep the same location, background layout, furniture, and environmental details. Do not introduce a different main character or move to a new location unless the story explicitly requests it. Make this scene a continuation of the previous scene, not a new unrelated story.\n\n" +
+      "VISUAL STYLE: " + style + ". Video format: " + format + ". Natural movement, coherent details, clear composition.";
+
+    scenes.push({
+      heading: headings[i],
+      prompt: prompt
+    });
+  }
 
   let output = "# DreamStory AI — Story Plan\n\n";
   output += "STORY IDEA: " + story + "\n";
