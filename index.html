@@ -199,6 +199,20 @@ function renderScenes(){
 
   document.getElementById("results").innerHTML = html;
 }
+  
+function addScene(){
+  const nextNumber = scenes.length + 1;
+
+  scenes.push({
+    heading: "Scene " + nextNumber + " — New scene",
+    prompt: "Original story: " +
+      document.getElementById("story").value.trim() +
+      "\n\nDescribe the action for this new scene here."
+  });
+
+  renderScenes();
+  updateSavedPlan();
+}
 function updateScene(index){
   const editor = document.getElementById("sceneEdit" + index);
   if(!editor) return;
